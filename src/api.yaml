@@ -1,0 +1,766 @@
+openapi: 3.0.0
+info:
+  title: Ecommerce API
+  description: API documentation for the Ecommerce app
+  version: 1.0.0
+servers:
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/TAPANKHOKHARIYA176_1/Ecommerce/1.0.0
+  - url: http://localhost:3000
+    description: Local server
+paths:
+  /signup:
+    post:
+      tags:
+        - Signup API
+      summary: Create a new user.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserSignUp'
+      responses:
+        '201':
+          description: User created successfully.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /login:
+    post:
+      tags:
+        - Login API
+      summary: User login.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserLogin'
+      responses:
+        '204':
+          description: User logged in successfully.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /logout:
+    post:
+      tags:
+        - Logout API
+      summary: User logout.
+      responses:
+        '204':
+          description: User logged out successfully.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /forgotPassword:
+    post:
+      tags:
+        - Forgot Password API
+      summary: Send reset token.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ForgotPassword'
+      responses:
+        '200':
+          description: Reset token sent successfully.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /resetPassword:
+    post:
+      tags:
+        - Reset Password API
+      summary: Reset password.
+      parameters:
+        - name: token
+          in: query
+          description: Reset token received via email.
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResetPassword'
+      responses:
+        '200':
+          description: Password reset successful.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /items:
+    get:
+      tags:
+        - Items API
+      summary: Get all items.
+      responses:
+        '200':
+          description: A JSON array of items.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Item'
+  
+    post:
+      tags:
+        - Items API
+      summary: Add item.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AddItem'
+      responses:
+        '200':
+          description: Item added successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+
+  /items/myItems:
+    get:
+      tags:
+        - Items API
+      summary: Get items of the authenticated user.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: A JSON array of user items.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Item'
+
+  /items/search:
+    get:
+      tags:
+        - Items API
+      summary: Search items by title.
+      parameters:
+        - name: searchString
+          in: query
+          description: Search string to match item titles.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A JSON array of matched items.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Item'
+
+  /items/filter:
+    get:
+      tags:
+        - Items API
+      summary: Filter items by category and price range.
+      parameters:
+        - name: category
+          in: query
+          description: Category to filter items.
+          required: false
+          schema:
+            type: string
+        - name: minPrice
+          in: query
+          description: Minimum price to filter items.
+          required: false
+          schema:
+            type: number
+        - name: maxPrice
+          in: query
+          description: Maximum price to filter items.
+          required: false
+          schema:
+            type: number
+      responses:
+        '200':
+          description: A JSON array of filtered items.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Item'
+
+  /items/{itemId}:
+    get:
+      tags:
+        - Items API
+      summary: Get item by ID.
+      parameters:
+        - name: itemId
+          in: path
+          description: ID of the item to retrieve.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A JSON object representing the item.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+    put:
+      tags:
+        - Items API
+      summary: Update item by ID.
+      parameters:
+        - name: itemId
+          in: path
+          description: ID of the item to update.
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UpdateItem'
+      responses:
+        '200':
+          description: Updated item object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+    delete:
+      tags:
+        - Items API
+      summary: Delete item by ID.
+      parameters:
+        - name: itemId
+          in: path
+          description: ID of the item to delete.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Item deleted successfully.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /category/{categoryId}/items:
+    get:
+      tags:
+        - Items API
+      summary: Get items by category ID.
+      parameters:
+        - name: categoryId
+          in: path
+          description: ID of the category to retrieve items from.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A JSON array of items.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Item'
+
+  /cart:
+    get:
+      tags:
+        - Cart API
+      summary: Get user's cart.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: A JSON array of cart items.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cart'
+
+    post:
+      tags:
+        - Cart API
+      summary: Add item to cart.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddToCart'
+      responses:
+        '200':
+          description: Item added to cart successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+  
+  /cart/increaseQuantity/{itemId}:
+    put:
+      tags:
+        - Cart API
+      summary: Increase quantity of an item in the cart.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: itemId
+          in: path
+          description: ID of the item to increase quantity.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Quantity increased successfully.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  
+  /cart/decreaseQuantity/{itemId}:
+    put:
+      tags:
+        - Cart API
+      summary: Decrease quantity of an item in the cart.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: itemId
+          in: path
+          description: ID of the item to decrease quantity.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Quantity decreased successfully.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /cart/{cartItemId}:
+    delete:
+      tags:
+        - Cart API
+      summary: Remove item from cart.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: cartItemId
+          in: path
+          description: ID of the cart item to remove.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Item removed from cart successfully.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+          
+  /cart/empty:
+    delete:
+      tags:
+        - Cart API
+      summary: Empty cart.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Cart emptied successfully.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  
+  /cart/checkout:
+    post:
+      tags:
+        - Cart API
+      summary: Checkout all items in the cart.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Cart checkout successful.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /profile/changePassword:
+    put:
+      tags:
+        - Profile API
+      summary: Change user password.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/updatePassword'
+      responses:
+        '200':
+          description: Password updated successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                  name:
+                    type: string
+                  email:
+                    type: string
+                  createdAt:
+                    type: string
+                    format: date-time
+                  updatedAt:
+                    type: string
+                    format: date-time
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /profile/changeNameAndAddress:
+    put:
+      tags:
+        - Profile API
+      summary: Change user name and address.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/updateNameAndAddress'
+      responses:
+        '200':
+          description: Name and address updated successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                  name:
+                    type: string
+                  email:
+                    type: string
+                  address:
+                    type: string
+                  createdAt:
+                    type: string
+                    format: date-time
+                  updatedAt:
+                    type: string
+                    format: date-time
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /profile/changeEmail:
+    post:
+      tags:
+        - Profile API
+      summary: Change user email.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/changeEmail'
+      responses:
+        '200':
+          description: Email changed successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                  name:
+                    type: string
+                  email:
+                    type: string
+                  createdAt:
+                    type: string
+                    format: date-time
+                  updatedAt:
+                    type: string
+                    format: date-time
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /profile/userEmail/verify:
+    post:
+      tags:
+        - Profile API
+      summary: Verify user email.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/verifyEmail'
+      responses:
+        '200':
+          description: Email verified successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                  name:
+                    type: string
+                  email:
+                    type: string
+                  isEmailVerified:
+                    type: boolean
+                  createdAt:
+                    type: string
+                    format: date-time
+                  updatedAt:
+                    type: string
+                    format: date-time'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /profile/email/verify:
+    post:
+      tags:
+        - Profile API
+      summary: Verify user email.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Email verified successfully.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+components:
+  responses:
+    BadRequest:
+      description: Bad request.
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    UserSignUp:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+      required:
+        - name
+        - email
+        - password
+    UserLogin:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      required:
+        - email
+        - password
+    ForgotPassword:
+      type: object
+      properties:
+        email:
+          type: string
+      required:
+        - email
+    ResetPassword:
+      type: object
+      properties:
+        password:
+          type: string
+      required:
+        - password
+    Item:
+      type: object
+      properties:
+        title:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        images:
+          type: array
+          items:
+            type: string
+        categoryId:
+          type: string
+          description: The ID of the category the item belongs to.
+        price:
+          type: number
+        description:
+          type: string
+        quantity:
+          type: integer
+        userId:
+          type: string
+          description: The ID of the user who owns the item.
+      required:
+        - title
+        - categoryId
+        - price
+        - userId
+    AddItem:
+      type: object
+      properties:
+        title:
+          type: string
+        categoryId:
+          type: string
+        price:
+          type: number
+        description:
+          type: string
+        quantity:
+          type: number
+      required:
+        - title
+        - categoryId
+        - price
+        - quantity
+    UpdateItem:
+      type: object
+      properties:
+        title:
+          type: string
+        categoryId:
+          type: string
+        price:
+          type: number
+        description:
+          type: string
+        quantity:
+          type: number
+      required:
+        - title
+        - categoryId
+        - price
+        - quantity
+    Cart:
+      type: object
+      properties:
+        user:
+          type: string
+          description: The ID of the user associated with the cart.
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              item:
+                type: string
+                description: The ID of the item in the cart.
+              quantity:
+                type: number
+                minimum: 1
+                default: 1
+                description: The quantity of the item in the cart.
+          description: An array of items in the cart.
+      required:
+        - user
+        - items
+      additionalProperties: false
+    AddToCart:
+      type: object
+      properties:
+        itemId:
+          type: string
+        quantity:
+          type: number
+      required:
+        - itemId
+        - quantity
+    updatePassword:
+      type: object
+      properties:
+        oldPassword:
+          type: string
+          description: The old password provided by the user.
+        newPassword:
+          type: string
+          description: The new password provided by the user.
+        confirmNewPassword:
+          type: string
+          description: The confirmation of the new password provided by the user.
+      required:
+        - oldPassword
+        - newPassword
+        - confirmNewPassword
+      additionalProperties: false
+    updateNameAndAddress:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The updated name of the user.
+        address:
+          type: string
+          description: The updated address of the user.
+      required:
+        - name
+        - address
+      additionalProperties: false
+    changeEmail:
+      type: object
+      properties:
+        newEmail:
+          type: string
+          description: The new email address provided by the user.
+      required:
+        - newEmail
+      additionalProperties: false
+    verifyEmail:
+      type: object
+      properties:
+        token:
+          type: string
+          description: The verification token provided in the query parameter.
+      required:
+        - token
+      additionalProperties: false
