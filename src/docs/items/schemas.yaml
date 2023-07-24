@@ -1,0 +1,90 @@
+components:
+  schemas:
+      Errors:
+        type: object
+        properties:
+          code:
+            type: string
+            description: incorrect_password
+          message:
+            type: string
+            description: ${type}
+        required:
+          - message
+          - code
+      Item:
+        type: object
+        properties:
+          title:
+            type: string
+          createdAt:
+            type: string
+            format: date-time
+          updatedAt:
+            type: string
+            format: date-time
+          images:
+            type: array
+            items:
+              type: string
+          categoryId:
+            type: string
+            description: The ID of the category the item belongs to.
+          price:
+            type: number
+          description:
+            type: string
+          quantity:
+            type: integer
+          userId:
+            type: string
+            description: The ID of the user who owns the item.
+        required:
+          - title
+          - categoryId
+          - price
+          - userId
+      AddItem:
+        type: object
+        properties:
+          title:
+            type: string
+          categoryId:
+            type: string
+          price:
+            type: number
+          description:
+            type: string
+          quantity:
+            type: number
+          images:
+            type: array
+            items:
+              type: string
+        required:
+          - title
+          - categoryId
+          - price
+          - quantity
+      UpdateItem:
+        type: object
+        properties:
+          title:
+            type: string
+          categoryId:
+            type: string
+          price:
+            type: number
+          description:
+            type: string
+          quantity:
+            type: number
+          images:
+            type: array
+            items:
+              type: string
+        required:
+          - title
+          - categoryId
+          - price
+          - quantity

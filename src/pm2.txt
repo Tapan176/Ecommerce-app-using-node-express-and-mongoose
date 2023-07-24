@@ -1,0 +1,1 @@
+set-executionpolicy -scope process -executionpolicy bypass

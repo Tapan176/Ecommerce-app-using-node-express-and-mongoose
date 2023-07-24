@@ -1,45 +1,39 @@
 module.exports = {
   env: {
-    browser: true,
-    commonjs: true,
-    es2021: true
+    node: true,
+    es2021: true,
   },
-  extends: 'standard',
-  overrides: [
-    {
-      files: ['.eslintrc.js', '.eslintrc.cjs'],
-      env: {
-        node: true
-      },
-      parserOptions: {
-        sourceType: 'script'
-      }
-    }
-  ],
+  extends: ['airbnb-base'],
   parserOptions: {
-    ecmaVersion: 'latest'
+    ecmaVersion: 2021,
+    sourceType: 'module',
   },
   rules: {
-    'no-console': 'warn',
-    'no-alert': 'error',
-    'no-unused-vars': 'error',
-
-    'no-restricted-properties': [
-      'error',
-      {
-        object: 'document',
-        property: 'cookie',
-        message: 'Access to document.cookie is not allowed.'
-      }
-    ],
+    'no-console': 'off',
+    'no-unused-vars': ['error', { argsIgnorePattern: 'next' }],
+    'prefer-destructuring': 'off',
+    'arrow-body-style': 'off',
     'no-restricted-syntax': [
       'error',
       {
-        selector: 'CallExpression[callee.object.name="document"][callee.property.name="write"]',
-        message: 'Use of document.write() is not allowed.'
-      }
+        selector: 'CallExpression[callee.object.name=\'console\'][callee.property.name!=/^(log|warn|error|info|trace)$/]',
+        message: 'Unexpected property on console object was called',
+      },
+      {
+        selector: 'CallExpression[callee.object.name=\'console\'][callee.property.name=\'log\'][arguments.length<2]',
+        message: 'Missing arguments for log function',
+      },
     ],
-    'no-eval': 'error',
-    'no-implied-eval': 'error'
-  }
-}
+    'no-underscore-dangle': ['error', { allow: ['_id'] }],
+    'consistent-return': 'off',
+    'class-methods-use-this': 'off',
+    'import/prefer-default-export': 'off',
+  },
+  settings: {
+    'import/resolver': {
+      node: {
+        extensions: ['.js', '.jsx', '.json'],
+      },
+    },
+  },
+};

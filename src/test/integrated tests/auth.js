@@ -91,7 +91,9 @@
 //   describe('POST /resetPassword', () => {
 //     it('should return status 200 and reset the password', (done) => {
 //       chai.request(app)
-//         .post('/resetPassword?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imt0YXBhbjE3NkBnbWFpbC5jb20iLCJpYXQiOjE2ODc3NzgxOTIsImV4cCI6MTY4Nzc4MTc5Mn0.JpByHj0XzXYCQiIq-orcI9t76Vgm45xYMvV2TlNjHC8')
+//         .post('/resetPassword?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+//    .eyJlbWFpbCI6Imt0YXBhbjE3NkBnbWFpbC5jb20iLCJpYXQiOjE2ODc3NzgxOTIsImV4cCI6MTY4Nzc4MTc5Mn0
+//    .JpByHj0XzXYCQiIq-orcI9t76Vgm45xYMvV2TlNjHC8')
 //         .send({ newPassword: 'Tapan@12', confirmPassword: 'Tapan@12' })
 //         .end((err, res) => {
 //           expect(res).to.have.status(200);

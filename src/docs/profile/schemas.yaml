@@ -1,0 +1,62 @@
+components:
+  schemas:
+      Errors:
+        type: object
+        properties:
+          code:
+            type: string
+            description: incorrect_password
+          message:
+            type: string
+            description: ${type}
+        required:
+          - message
+          - code
+      updatePassword:
+        type: object
+        properties:
+          oldPassword:
+            type: string
+            description: The old password provided by the user.
+          newPassword:
+            type: string
+            description: The new password provided by the user.
+          confirmNewPassword:
+            type: string
+            description: The confirmation of the new password provided by the user.
+        required:
+          - oldPassword
+          - newPassword
+          - confirmNewPassword
+        additionalProperties: false
+      updateNameAndAddress:
+        type: object
+        properties:
+          name:
+            type: string
+            description: The updated name of the user.
+          address:
+            type: string
+            description: The updated address of the user.
+        required:
+          - name
+          - address
+        additionalProperties: false
+      changeEmail:
+        type: object
+        properties:
+          newEmail:
+            type: string
+            description: The new email address provided by the user.
+        required:
+          - newEmail
+        additionalProperties: false
+      verifyEmail:
+        type: object
+        properties:
+          token:
+            type: string
+            description: The verification token provided in the query parameter.
+        required:
+          - token
+        additionalProperties: false

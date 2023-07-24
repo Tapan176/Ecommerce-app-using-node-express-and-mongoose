@@ -1,0 +1,48 @@
+components:
+  schemas:
+      Errors:
+        type: object
+        properties:
+          code:
+            type: string
+            description: incorrect_password
+          message:
+            type: string
+            description: ${type}
+        required:
+          - message
+          - code
+      Cart:
+        type: object
+        properties:
+          user:
+            type: string
+            description: The ID of the user associated with the cart.
+          items:
+            type: array
+            items:
+              type: object
+              properties:
+                item:
+                  type: string
+                  description: The ID of the item in the cart.
+                quantity:
+                  type: number
+                  minimum: 1
+                  default: 1
+                  description: The quantity of the item in the cart.
+            description: An array of items in the cart.
+        required:
+          - user
+          - items
+        additionalProperties: false
+      AddToCart:
+        type: object
+        properties:
+          itemId:
+            type: string
+          quantity:
+            type: number
+        required:
+          - itemId
+          - quantity

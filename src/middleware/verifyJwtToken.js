@@ -1,18 +1,18 @@
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
 
 const verifyJwtToken = (req, res, next) => {
-  const { token } = req.query
+  const { token } = req.query;
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET)
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
     if (decoded) {
-      next()
+      next();
     } else {
-      throw new Error('invalid_token')
+      throw new Error('invalid_token');
     }
   } catch (error) {
-    next(error)
+    next(error);
   }
-}
+};
 
-module.exports = { verifyJwtToken }
+module.exports = { verifyJwtToken };

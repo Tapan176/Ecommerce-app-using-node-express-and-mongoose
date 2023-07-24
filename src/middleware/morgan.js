@@ -1,4 +1,4 @@
-const morgan = require('morgan')
+const morgan = require('morgan');
 
 const format = (tokens, req, res) => {
   return [
@@ -7,10 +7,10 @@ const format = (tokens, req, res) => {
     tokens.url(req, res),
     tokens.status(req, res),
     tokens.res(req, res, 'content-length'), '-',
-    tokens['response-time'](req, res), 'ms'
-  ].join(' ')
-}
+    tokens['response-time'](req, res), 'ms',
+  ].join(' ');
+};
 
-const customMorgan = morgan(format)
+const customMorgan = morgan(format);
 
-module.exports = customMorgan
+module.exports = customMorgan;
